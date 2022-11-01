@@ -7,17 +7,6 @@
 export type TemplateCallback<T> = (err: lib.TemplateError | null, res: T | null) => void;
 export type Callback<E, T> = (err: E | null, res: T | null) => void;
 
-function render(name: string, context?: Record<string, unknown>): string;
-function render(name: string, context?: Record<string, unknown>, callback?: TemplateCallback<string>): void;
-
-function renderString(src: string, context: Record<string, unknown>): string;
-function renderString(src: string, context: Record<string, unknown>, callback?: TemplateCallback<string>): void;
-
-function compile(src: string, env?: Environment, callback?: TemplateCallback<Template>): Template;
-
-function precompile(path: string, opts?: PrecompileOptions): string;
-function precompileString(src: string, opts?: PrecompileOptions): string;
-
 export interface PrecompileOptions {
     name?: string | undefined;
     asFunction?: boolean | undefined;
@@ -33,9 +22,6 @@ export class Template {
     render(context?: object): string;
     render(context?: object, callback?: TemplateCallback<string>): void;
 }
-
-function configure(options: ConfigureOptions): Environment;
-function configure(path: string | string[], options?: ConfigureOptions): Environment;
 
 export interface ConfigureOptions {
     autoescape?: boolean | undefined;
@@ -102,8 +88,6 @@ export interface Extension {
     // Parser API is undocumented it is suggested to check the source: https://github.com/mozilla/nunjucks/blob/master/src/parser.js
     parse(parser: any, nodes: any, lexer: any): any;
 }
-
-function installJinjaCompat(): void;
 
 export interface ILoader {
     async?: boolean | undefined;
@@ -187,27 +171,56 @@ export namespace lib {
     }
 }
 
-export type Instance = {
-  Environment: Environment,
-  Template: Template,
-  Loader: Loader,
-  FileSystemLoader: FileSystemLoader,
-  NodeResolveLoader: NodeResolveLoader,
-  PrecompiledLoader: PrecompiledLoader,
-  compiler: compiler,
-  parser: parser,
-  lexer: lexer,
-  runtime: runtime,
-  lib: lib,
-  nodes: nodes,
-  installJinjaCompat: installJinjaCompat,
-  configure: configure,
-  reset(): void,
-  compile: (message: string, lineno: number, colno: number, eagerCompile?: boolean) => Template,
-  render: render,
-  renderString: renderString,
-  precompile: precompile,
-  precompileString: precompileString,
+namespace Nunjucks {
+  export {
+    Environment,
+    Template,
+    Loader,
+    FileSystemLoader,
+    NodeResolveLoader,
+    PrecompiledLoader,
+  }
+
+  export namespace compiler {
+    // TODO
+  }
+
+  export namespace parser {
+    // TODO
+  }
+
+  export namespace lexer {
+    // TODO
+  }
+
+  export namespace runtime {
+    // TODO
+  }
+
+  export lib
+
+  export namespace nodes {
+    // TODO
+  }
+
+  export function installJinjaCompat(): void;
+
+  export function configure(options: ConfigureOptions): Environment;
+  export function configure(path: string | string[], options?: ConfigureOptions): Environment;
+
+  export function reset(): void;
+
+  export function compile: (message: string, lineno: number, colno: number, eagerCompile?: boolean) => Template;
+
+  export function render(name: string, context?: Record<string, unknown>): string;
+  export function render(name: string, context?: Record<string, unknown>, callback?: TemplateCallback<string>): void;
+
+  export function renderString(src: string, context: Record<string, unknown>): string;
+  export function renderString(src: string, context: Record<string, unknown>, callback?: TemplateCallback<string>): void;
+
+  export function precompile(path: string, opts?: PrecompileOptions): string;
+
+  export function precompileString(src: string, opts?: PrecompileOptions): string;
 }
 
-export default Instance
+export default Nunjucks
